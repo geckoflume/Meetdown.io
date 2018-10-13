@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
@@ -18,46 +19,60 @@ class Event
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(max = 255, maxMessage = "The event name cannot be longer than {{ limit }} characters.")
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(max = 255, maxMessage = "The event location cannot be longer than {{ limit }} characters.")
      */
     private $location;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(max = 255, maxMessage = "The event category cannot be longer than {{ limit }} characters.")
      */
     private $category;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(max = 255, maxMessage = "The event hoster cannot be longer than {{ limit }} characters.")
      */
     private $hoster;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(max = 255, maxMessage = "The event poster cannot be longer than {{ limit }} characters.")
      */
     private $poster;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\NotBlank()
+     * @Assert\Type("\DateTime")
      */
     private $date_start;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Assert\Type("\DateTime")
      */
     private $date_end;
 
     /**
      * @ORM\Column(type="time")
+     * @Assert\NotBlank()
+     * @Assert\Type("\DateTime")
      */
     private $time_start;
 
     /**
      * @ORM\Column(type="time", nullable=true)
+     * @Assert\Type("\DateTime")
      */
     private $time_end;
 
@@ -67,12 +82,16 @@ class Event
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=10, nullable=true)
+     * @Assert\Length(max = 10, maxMessage = "The phone number cannot be longer than {{ limit }} characters.")
      */
     private $phone;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Email(message = "The email {{ value }} is not a valid email.")
+     * @Assert\Length(max = 255, maxMessage = "The email address cannot be longer than {{ limit }} characters.")
      */
     private $email;
 

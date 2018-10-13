@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Form\NewEventType;
+use App\Form\EventType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,6 +15,7 @@ class EventController extends AbstractController
      */
     public function index()
     {
+        // Find all events
         $events=$this->getDoctrine()->getRepository(Event::class)->findAll();
 
         return $this->render('event/index.html.twig', [
@@ -28,6 +29,7 @@ class EventController extends AbstractController
      */
     public function detail($id)
     {
+        // Find $id event
         $event = $this->getDoctrine()->getRepository(Event::class)->find($id);
 
         return $this->render('event/event.html.twig', [
@@ -40,21 +42,20 @@ class EventController extends AbstractController
      */
     public function addEvent(Request $request)
     {
+        // 1) build the form
         $event = new Event();
-        $form = $this->createForm(NewEventType::class, $event);
-        //$form = $this->get('form.factory')->create(NewEventType::class, $event);
+        $form = $this->createForm(EventType::class, $event);
 
+        // 2) handle the submit (will only happen on POST)
+        // Link between form and request object
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
 
-        if($request->isMethod('POST')){
-            // Link between form and request object
-            $form->handleRequest($request);
-            if($form->isValid()){
-                // Store new event
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($event);
-                $em->flush();
-                return $this->redirectToRoute('events');
-            }
+            // 3) Save new event
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($event);
+            $em->flush();
+            return $this->redirectToRoute('events');
         }
 
         return $this->render('event/add.html.twig', [
