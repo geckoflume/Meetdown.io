@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ event.name|e }} | Meetdown.io{% endblock %}
+
+{% block body %}
+    <section class="jumbotron" xmlns="http://www.w3.org/1999/html">
+        {% if event.dateEnd %}
+            {% if event.timeEnd %}
+                <h2 class="jumbotron-heading">From {{ event.dateStart|date('l, M d, Y') }} to {{ event.dateEnd|date('l, M d, Y') }}</h2>
+                <h2 class="jumbotron-heading">{{ event.timeStart|date('H:i') }}-{{ event.timeStart|date('H:i') }}</h2>
+            {% else %}
+                <h2>From {{ event.dateStart|date('l, M d, Y') }} to {{ event.dateEnd|date('l, M d, Y') }} at {{ event.timeStart|date('H:i') }}</h2>
+            {% endif %}
+        {% else %}
+            {% if event.timeEnd %}
+                <h2 class="jumbotron-heading">{{ event.dateStart|date('l, M d, Y') }}, from {{ event.timeStart|date('H:i') }} to {{ event.timeStart|date('H:i') }}</h2>
+            {% else %}
+                <h2 class="jumbotron-heading">{{ event.dateStart|date('l, M d, Y') }} at {{ event.timeStart|date('H:i') }}</h2>
+            {% endif %}
+        {% endif %}
+
+        <h2>
+            {{ event.name }}
+            {% if event.location %}
+                at <a href="https://www.google.com/maps/search/?api=1&query={{ event.location|e('url') }}">{{ event.location }}</a>
+            {% endif %}
+            {% if event.category %}
+                <span class="badge badge-secondary float-right">{{ event.category }}</span>
+            {% endif %}
+        </h2>
+        <hr class="container">
+
+        {% if event.description %}
+            <p class="lead text-muted">{{ event.description }}</p>
+        {% endif %}
+
+        <p class="text-muted">Hosted by {{ event.hoster }}, added by {{ event.poster }}.</p>
+        <div class="text-center">
+            <div class="btn-group">
+                {% if event.phone %}
+                    <a href="tel:{{ event.phone }}" class="btn btn-outline-success my-2">Phone: {{ event.phone }}</a>
+                {% endif %}
+                <a href="mailto:{{ event.phone }}" class="btn btn-outline-success my-2">Email: {{ event.email }}</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

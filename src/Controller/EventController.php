@@ -2,43 +2,47 @@
 
 namespace App\Controller;
 
+use App\Form\NewEventType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Event;
-use Symfony\Component\HttpFoundation\Response;
 
 class EventController extends AbstractController
 {
     /**
-     * @Route("/", name="home")
+     * @Route("/", name="event")
      */
     public function index()
     {
         $events=$this->getDoctrine()->getRepository(Event::class)->findAll();
 
-        return $this->render('home/index.html.twig', [
+        return $this->render('event/index.html.twig', [
             'controller_name' => 'EventController',
             'events' => $events,
         ]);
     }
 
     /**
-     * @Route("/event/{id}", name="event_show")
+     * @Route("/event/{id}", name="event_detail", requirements={"id"="\d+"})
      */
     public function detail($id)
     {
         $event = $this->getDoctrine()->getRepository(Event::class)->find($id);
 
-        if (!$event) {
-            throw $this->createNotFoundException(
-                'No event found for id '.$id
-            );
-        }
+        return $this->render('event/event.html.twig', [
+            'event' => $event,
+        ]);
+    }
 
-        return new Response('Check out this great event: '.$event->getName());
+    /**
+     * @Route("/event/new", name="add_event")
+     */
+    public function addEvent($id)
+    {
+        $form = $this->createForm(NewEventType::class, $task);
 
-        // or render a template
-        // in the template, print things with {{ product.name }}
-        // return $this->render('product/show.html.twig', ['product' => $product]);
+        return $this->render('event/event.html.twig', [
+            'event' => $event,
+        ]);
     }
 }
