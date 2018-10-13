@@ -4,13 +4,14 @@ namespace App\Controller;
 
 use App\Form\NewEventType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Event;
 
 class EventController extends AbstractController
 {
     /**
-     * @Route("/", name="event")
+     * @Route("/", name="events")
      */
     public function index()
     {
@@ -37,12 +38,27 @@ class EventController extends AbstractController
     /**
      * @Route("/event/new", name="add_event")
      */
-    public function addEvent($id)
+    public function addEvent(Request $request)
     {
-        $form = $this->createForm(NewEventType::class, $task);
+        $event = new Event();
+        $form = $this->createForm(NewEventType::class, $event);
+        //$form = $this->get('form.factory')->create(NewEventType::class, $event);
 
-        return $this->render('event/event.html.twig', [
-            'event' => $event,
+
+        if($request->isMethod('POST')){
+            // Link between form and request object
+            $form->handleRequest($request);
+            if($form->isValid()){
+                // Store new event
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($event);
+                $em->flush();
+                return $this->redirectToRoute('events');
+            }
+        }
+
+        return $this->render('event/add.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }
