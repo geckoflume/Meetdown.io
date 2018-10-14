@@ -49,6 +49,7 @@ class Event
      * @Assert\Length(max = 255, maxMessage = "The event poster cannot be longer than {{ limit }} characters.")
      */
     private $poster;
+    //TODO: imprement ManyToOne relation with the connected User
 
     /**
      * @ORM\Column(type="date")

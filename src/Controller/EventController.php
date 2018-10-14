@@ -15,8 +15,8 @@ class EventController extends AbstractController
      */
     public function index()
     {
-        // Find all events
-        $events=$this->getDoctrine()->getRepository(Event::class)->findAll();
+        // Find all events, ascending according to the start date and start time
+        $events=$this->getDoctrine()->getRepository(Event::class)->findBy(array(), array('date_start' => 'asc', 'time_start' => 'asc'));
 
         return $this->render('event/index.html.twig', [
             'controller_name' => 'EventController',
