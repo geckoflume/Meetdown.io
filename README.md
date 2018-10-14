@@ -1,4 +1,4 @@
-# # Meetdown&#46;io
+# Meetdown&#46;io
 A simple Symfony project allowing its users to organize events using a common platform.
 
 ## Requirements
