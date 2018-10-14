@@ -57,14 +57,13 @@ class Event
     private $hoster;
 
     /**
-     * @var string
+     * @var User
      *
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
-     * @Assert\Length(max = 255, maxMessage = "The event poster cannot be longer than {{ limit }} characters.")
      */
     private $poster;
-    //TODO: imprement ManyToOne relation with the connected User
 
     /**
      * @var \DateTime
@@ -178,12 +177,12 @@ class Event
         return $this;
     }
 
-    public function getPoster(): ?string
+    public function getPoster(): ?User
     {
         return $this->poster;
     }
 
-    public function setPoster(string $poster): self
+    public function setPoster(User $poster): self
     {
         $this->poster = $poster;
 

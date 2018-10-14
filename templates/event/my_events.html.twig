@@ -1,0 +1,12 @@
+{#
+   This is the template used to display all user events.
+#}
+{% extends 'event/base_list_events.html.twig' %}
+
+{% block title %}My events | Meetdown.io{% endblock %}
+
+{% block headertitle %}Meetdown.io - My events {% if event_count %}({{ event_count }}){% endif %}{% endblock %}
+
+{% block event %}
+<a class="btn btn-sm btn-outline-danger" href="event/{{ event.id }}/delete">Delete</a>
+{% endblock %}

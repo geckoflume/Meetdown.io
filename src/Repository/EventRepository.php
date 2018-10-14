@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -12,8 +13,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method Event[]    findAll()
  * @method Event[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  *
- * This custom Doctrine repository is empty because so far we don't need any custom
- * method to query for application event information.
+ * Repository used to add custom queries for application event information.
  *
  * @author Florian Mornet <florian.mornet@enseirb-matmeca.fr>
  */
@@ -28,22 +28,39 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
-//    /**
-//     * @return Event[] Returns an array of Event objects
-//     */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param User $user
+     * @return Event[] Returns an array of Event objects
+     */
+    public function findByUser(User $user)
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('e.poster = :val')
+            ->setParameter('val', $user)
+            ->orderBy('e.date_start', 'ASC')
+            ->orderBy('e.time_start', 'ASC')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
+    /**
+     * @param User $user
+     * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countEventsByUser(User $user)
+    {
+        return $this->createQueryBuilder('e')
+            ->select('count(e.id)')
+            ->andWhere('e.poster = :val')
+            ->setParameter('val', $user)
+            ->orderBy('e.date_start', 'ASC')
+            ->orderBy('e.time_start', 'ASC')
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
 
     /*
     public function findOneBySomeField($value): ?Event

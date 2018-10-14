@@ -24,12 +24,13 @@
     <h5 class="my-0 mr-md-auto font-weight-normal"><a href="/"><img src="{{ asset('assets/img/meetdown_logo2.png') }}" width="150"></a></h5>
     {% if app.user %}
     <nav class="my-2 my-md-0 mr-md-3">
-        <a class="p-2 text-dark" href="#">Welcome, {{ app.user.fullName }}</a>
+        <a class="p-2 text-dark" href="/my_events">Welcome, {{ app.user.fullName }}</a>
     </nav>
     {% endif %}
     <div class="btn-group">
         {% if app.user %}
             <a class="btn btn-outline-success" href="/event/new">Add a new event</a>
+            <a class="btn btn-success" href="/my_events">My events {% if event_count %}({{ event_count }}){% endif %}</a>
             <a class="btn btn-danger" href="/logout">Logout</a>
         {% elseif not app.user %}
             <a class="btn btn-outline-success" href="/login">Log in</a>
@@ -39,7 +40,7 @@
 </div>
 
 <div class="meetdown-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <h1 class="display-4">Meetdown.io</h1>
+    <h1 class="display-4">{% block headertitle %}Meetdown.io{% endblock %}</h1>
     <p class="lead">Discover local events for all the things you love.</p>
 </div>
 

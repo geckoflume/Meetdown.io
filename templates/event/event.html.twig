@@ -37,7 +37,7 @@
             <p class="lead text-muted">{{ event.description }}</p>
         {% endif %}
 
-        <p class="text-muted">Hosted by {{ event.hoster }}, added by {{ event.poster }}.</p>
+        <p class="text-muted">Hosted by {{ event.hoster }}, added by {{ event.poster.fullName }}.</p>
         <div class="text-center">
             <div class="btn-group">
                 {% if event.phone %}

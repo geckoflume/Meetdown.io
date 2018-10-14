@@ -30,7 +30,6 @@ class EventType extends AbstractType
             ->add('location', TextType::class, array('label' => 'Event location (optional)', 'required' => false))
             ->add('category', TextType::class, array('label' => 'Category (optional)', 'required' => false))
             ->add('hoster', TextType::class, array('label' => 'Event hoster'))
-            ->add('poster', TextType::class)
             ->add('date_start', DateType::class, array('label' => 'Date when this event starts', 'widget' => 'single_text'))
             ->add('date_end', DateType::class, array('label' => 'Date when this event ends (optional)', 'widget' => 'single_text', 'required' => false))
             ->add('time_start', TimeType::class, array('label' => 'Time when this event starts', 'widget' => 'single_text'))
