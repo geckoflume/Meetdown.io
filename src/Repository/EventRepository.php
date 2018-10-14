@@ -61,16 +61,4 @@ class EventRepository extends ServiceEntityRepository
             ->getSingleScalarResult()
             ;
     }
-
-    /*
-    public function findOneBySomeField($value): ?Event
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

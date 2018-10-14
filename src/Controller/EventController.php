@@ -16,6 +16,21 @@ use App\Entity\Event;
 class EventController extends AbstractController
 {
     /**
+     * Returns the number of events a user added.
+     *
+     * @return int|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    private function getUserEventCount()
+    {
+        $event_count = null;
+        if ($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $event_count = $this->getDoctrine()->getRepository(Event::class)->countEventsByUser($this->getUser());
+        }
+        return $event_count;
+    }
+
+    /**
      * @Route("/", name="events")
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
@@ -24,23 +39,16 @@ class EventController extends AbstractController
         // Find all events, ascending according to the start date and start time
         $events=$this->getDoctrine()->getRepository(Event::class)->findBy(array(), array('date_start' => 'asc', 'time_start' => 'asc'));
 
-        $event_count = null;
-
-        $securityContext = $this->container->get('security.authorization_checker');
-        if ($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $event_count = $this->getDoctrine()->getRepository(Event::class)->countEventsByUser($this->getUser());
-        }
-
         return $this->render('event/base_list_events.html.twig', [
             'controller_name' => 'EventController',
             'events' => $events,
-            'event_count' => $event_count,
+            'event_count' => $this->getUserEventCount(),
         ]);
     }
 
     /**
      * @Route("/event/{id}", name="event_detail", requirements={"id"="\d+"})
-     * @param $id
+     * @param mixed $id The identifier.
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
@@ -49,16 +57,9 @@ class EventController extends AbstractController
         // Find $id event
         $event = $this->getDoctrine()->getRepository(Event::class)->find($id);
 
-        $event_count = null;
-
-        $securityContext = $this->container->get('security.authorization_checker');
-        if ($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $event_count = $this->getDoctrine()->getRepository(Event::class)->countEventsByUser($this->getUser());
-        }
-
         return $this->render('event/event.html.twig', [
             'event' => $event,
-            'event_count' => $event_count,
+            'event_count' => $this->getUserEventCount(),
         ]);
     }
 
@@ -71,12 +72,6 @@ class EventController extends AbstractController
      */
     public function addEvent(Request $request)
     {
-        $event_count = null;
-
-        $securityContext = $this->container->get('security.authorization_checker');
-        if ($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $event_count = $this->getDoctrine()->getRepository(Event::class)->countEventsByUser($this->getUser());
-        }
         // 1) build the form
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
@@ -96,11 +91,29 @@ class EventController extends AbstractController
 
         return $this->render('event/add_event.html.twig', [
             'form' => $form->createView(),
-            'event_count' => $event_count,
+            'event_count' => $this->getUserEventCount(),
         ]);
     }
 
-    // TODO: delete event action
+    /**
+     * @Route("/event/{id}/delete", name="delete_event", requirements={"id"="\d+"})
+     * @param mixed $id The identifier.
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteEvent($id)
+    {
+        // Find $id event
+        $event = $this->getDoctrine()->getRepository(Event::class)->find($id);
+
+        // Remove event from database if the logged in user is the one who posted the event
+        if($event->getPoster() === $this->getUser()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($event);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('my_events');
+    }
 
     /**
      * @Route("/my_events", name="my_events")
@@ -111,18 +124,11 @@ class EventController extends AbstractController
         // Find all events by the connected user
         $eventsUser = $this->getDoctrine()->getRepository(Event::class)->findByUser($this->getUser());
 
-        $event_count = null;
-
-        $securityContext = $this->container->get('security.authorization_checker');
-        if ($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $event_count = $this->getDoctrine()->getRepository(Event::class)->countEventsByUser($this->getUser());
-        }
-
         return $this->render('event/my_events.html.twig', [
             'controller_name' => 'EventController',
             'action_name' => 'my_events',
             'events' => $eventsUser,
-            'event_count' => $event_count,
+            'event_count' => $this->getUserEventCount(),
         ]);
     }
 }

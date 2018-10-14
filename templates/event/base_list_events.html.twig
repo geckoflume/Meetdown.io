@@ -31,9 +31,9 @@
 <script>
     // Generates a dark random color (hex between 0 and 9)
     function getRandomColor() {
-        var letters = '0123456789';
-        var color = '#';
-        for (var i = 0; i < 3; i++) {
+        const letters = '0123456789';
+        let color = '#';
+        for (let i = 0; i < 3; i++) {
             color += letters[Math.floor(Math.random() * 10)];
         }
         return color;
