@@ -11,10 +11,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity
  * @UniqueEntity(fields="email", message="Email already taken")
  * @UniqueEntity(fields="username", message="Username already taken")
+ *
+ * Defines the properties of the User entity to represent the application users.
+ * @author Florian Mornet <florian.mornet@enseirb-matmeca.fr>
  */
 class User implements UserInterface, \Serializable
 {
     /**
+     * @var int
+     *
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -22,12 +27,16 @@ class User implements UserInterface, \Serializable
     private $id;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\Length(max = 255, maxMessage = "The username cannot be longer than {{ limit }} characters.")
      */
     private $username;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank()
      * @Assert\Email(message = "The email {{ value }} is not a valid email.")
@@ -36,17 +45,23 @@ class User implements UserInterface, \Serializable
     private $email;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255)
      */
     private $password;
 
     /**
+     * @var string
+     *
      * @Assert\NotBlank()
      * @Assert\Length(max=4096)
      */
     private $plainPassword;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(max = 255, maxMessage = "The full name cannot be longer than {{ limit }} characters.")
      */
@@ -171,7 +186,9 @@ class User implements UserInterface, \Serializable
         ));
     }
 
-    /** @see \Serializable::unserialize() */
+    /** @see \Serializable::unserialize()
+     * @param $serialized
+     */
     public function unserialize($serialized)
     {
         list (

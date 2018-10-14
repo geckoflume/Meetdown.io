@@ -8,6 +8,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Event;
 
+/**
+ * Controller used to manage events.
+ * @author Florian Mornet <florian.mornet@enseirb-matmeca.fr>
+ */
 class EventController extends AbstractController
 {
     /**
@@ -26,6 +30,8 @@ class EventController extends AbstractController
 
     /**
      * @Route("/event/{id}", name="event_detail", requirements={"id"="\d+"})
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function detail($id)
     {
@@ -39,6 +45,8 @@ class EventController extends AbstractController
 
     /**
      * @Route("/event/new", name="add_event")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function addEvent(Request $request)
     {

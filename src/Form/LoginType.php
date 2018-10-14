@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -15,6 +14,10 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * Defines the form used to create and manipulate user login.
+ * @author Florian Mornet <florian.mornet@enseirb-matmeca.fr>
+ */
 class LoginType extends AbstractType
 {
     /**
@@ -22,11 +25,18 @@ class LoginType extends AbstractType
      */
     private $authenticationUtils;
 
+    /**
+     * LoginType constructor.
+     * @param AuthenticationUtils $authenticationUtils
+     */
     public function __construct(AuthenticationUtils $authenticationUtils)
     {
         $this->authenticationUtils = $authenticationUtils;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -46,6 +56,9 @@ class LoginType extends AbstractType
         });
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         // This form has no data class (User entity does not match)
